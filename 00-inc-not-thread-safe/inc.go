@@ -4,7 +4,14 @@ import "sync"
 
 var count int = 0
 
-func incCount(wg *sync.WaitGroup, delta int) {
+var wg *sync.WaitGroup
+
+func reset() {
+	wg = &sync.WaitGroup{}
+	count = 0
+}
+
+func incCount(delta int) {
 	for i := 0; i < delta; i++ {
 		count += 1
 	}
@@ -12,7 +19,7 @@ func incCount(wg *sync.WaitGroup, delta int) {
 }
 
 func parallelInc(numThreads int) (expectedCount int, observedCount int) {
-	var wg sync.WaitGroup
+	reset()
 
 	var incDelta int = 100
 
@@ -20,7 +27,7 @@ func parallelInc(numThreads int) (expectedCount int, observedCount int) {
 
 	for i := 0; i < numThreads; i++ {
 		wg.Add(1)
-		go incCount(&wg, incDelta)
+		go incCount(incDelta)
 	}
 	wg.Wait()
 

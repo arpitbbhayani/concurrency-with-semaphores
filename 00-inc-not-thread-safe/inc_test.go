@@ -28,16 +28,9 @@ func BenchmarkInc(b *testing.B) {
 					countMatched++
 					b.Setenv("MATCHED_COUNT", strconv.Itoa(countMatched))
 				}
-				count = 0
+				reset()
 			}
 			b.Logf("expected count matched the observed count %s out of %d times when number of threads were %d", os.Getenv("MATCHED_COUNT"), b.N, v.numThread)
 		})
-	}
-}
-
-func TestCorrectness(t *testing.T) {
-	expectedCount, observedCount := parallelInc(1000)
-	if observedCount != expectedCount {
-		t.Errorf("count expected = %d but seen to be %d\n", expectedCount, observedCount)
 	}
 }
