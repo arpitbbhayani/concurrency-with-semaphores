@@ -8,19 +8,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func TestIfKingAngry(t *testing.T) {
+func Test(t *testing.T) {
+	logrus.SetLevel(logrus.InfoLevel)
+	reset()
+
 	isKingAngry := Play()
 	if isKingAngry {
-		t.Error("king is angry")
+		t.Error("king got angry!")
 	}
 }
 
 func BenchmarkPlay(b *testing.B) {
 	logrus.SetLevel(logrus.ErrorLevel)
-	var countAngry int = 1
+	var countAngry int = 0
 	for i := 0; i < b.N; i++ {
+		reset()
 		isKingAngry := Play()
 		if isKingAngry {
+			countAngry += 1
 			b.Setenv("COUNT_ANGRY", strconv.Itoa(countAngry))
 		}
 	}

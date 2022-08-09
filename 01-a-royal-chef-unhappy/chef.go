@@ -8,20 +8,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var wg *sync.WaitGroup
+
 var isLunchPrepared bool = false
 var isKingAngry bool = false
 
 func reset() {
 	isLunchPrepared = false
 	isKingAngry = false
+
+	wg = &sync.WaitGroup{}
 }
 
 func act(activity string) {
 	time.Sleep(time.Duration(rand.Int()%20) * time.Millisecond)
-	logrus.Debugln(activity)
+	logrus.Info(activity)
 }
 
-func King(wg *sync.WaitGroup) {
+func King() {
 	act("king woke up")
 	act("king addressed the people")
 	act("king went to the diing room")
@@ -35,7 +39,7 @@ func King(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func Chef(wg *sync.WaitGroup) {
+func Chef() {
 	act("chef woke up")
 	act("chef started preparing lunch")
 	act("chef prepared the lunch")
@@ -48,11 +52,10 @@ func Chef(wg *sync.WaitGroup) {
 func Play() bool {
 	reset()
 
-	var wg sync.WaitGroup
 	wg.Add(2)
 
-	go King(&wg)
-	go Chef(&wg)
+	go King()
+	go Chef()
 
 	wg.Wait()
 
