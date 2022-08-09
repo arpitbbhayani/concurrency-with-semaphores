@@ -1,25 +1,43 @@
 package main
 
 import (
-	"sync"
+	"fmt"
+	"os"
+	"strconv"
 	"testing"
 )
 
-func TestCorrectness(t *testing.T) {
-	var wg sync.WaitGroup
+var table = []struct {
+	numThread int
+}{
+	{numThread: 1},
+	{numThread: 10},
+	{numThread: 50},
+	{numThread: 100},
+	{numThread: 500},
+	{numThread: 1000},
+}
 
-	var numThreads int = 1000
-	var incDelta int = 100
-
-	for i := 0; i < numThreads; i++ {
-		wg.Add(1)
-		go incCount(&wg, incDelta)
+func BenchmarkInc(b *testing.B) {
+	for _, v := range table {
+		b.Run(fmt.Sprintf("numThread-%d", v.numThread), func(b *testing.B) {
+			countMatched := 0
+			for i := 0; i < b.N; i++ {
+				expectedCount, observedCount := parallelInc(v.numThread)
+				if expectedCount == observedCount {
+					countMatched++
+					b.Setenv("MATCHED_COUNT", strconv.Itoa(countMatched))
+				}
+				count = 0
+			}
+			b.Logf("expected count matched the observed count %s out of %d times when number of threads were %d", os.Getenv("MATCHED_COUNT"), b.N, v.numThread)
+		})
 	}
+}
 
-	wg.Wait()
-
-	expectedCount := numThreads * incDelta
-	if count != expectedCount {
-		t.Errorf("count expected = %d but seen to be %d\n", expectedCount, count)
+func TestCorrectness(t *testing.T) {
+	expectedCount, observedCount := parallelInc(1000)
+	if observedCount != expectedCount {
+		t.Errorf("count expected = %d but seen to be %d\n", expectedCount, observedCount)
 	}
 }

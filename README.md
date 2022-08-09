@@ -23,6 +23,12 @@ The entire series is based on one book called "The Little Book of Semaphores" wh
 
 So, if you want to learn Concurrency in a very fun and interesting way, ho along :)
 
+
+```
+go test -bench=. -benchtime=1s -run=^#
+```
+
 # Examples
 
 - 00-inc-not-thread-safe
+
