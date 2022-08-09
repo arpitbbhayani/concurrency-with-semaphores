@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-var table = []struct {
+var scenarios = []struct {
 	numThread int
 }{
 	{numThread: 1},
@@ -19,7 +19,7 @@ var table = []struct {
 }
 
 func BenchmarkInc(b *testing.B) {
-	for _, v := range table {
+	for _, v := range scenarios {
 		b.Run(fmt.Sprintf("numThread-%d", v.numThread), func(b *testing.B) {
 			countMatched := 0
 			for i := 0; i < b.N; i++ {
