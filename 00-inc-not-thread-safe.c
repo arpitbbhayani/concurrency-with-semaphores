@@ -16,7 +16,7 @@ void reset() {
   count = 0;
 }
 
-void test_correctness() {
+void test_inc() {
   pthread_t th[THREAD_COUNT];
 
   reset();
@@ -25,7 +25,7 @@ void test_correctness() {
     if (pthread_create(&th[i], NULL, &inc_count, NULL) != 0) {
       perror("failed to create thread");
     }
-  }
+  } 
 
   for (int i = 0; i < THREAD_COUNT; i++) {
     if (pthread_join(th[i], NULL) != 0) {
@@ -38,7 +38,7 @@ void test_correctness() {
 
 int main(int argc, char *argv[]) {
   for (int i = 0; i < 10; i++) {
-    test_correctness();
+    test_inc();
   }
   return 0;
 }
