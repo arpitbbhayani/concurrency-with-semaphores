@@ -5,6 +5,8 @@
 
 int count = 0;
 
+// increment  s the `count` variable by `THREAD_COUNT`
+// one at a time
 void * inc_count() {
   for (int i = 0; i < THREAD_COUNT; i++) {
     count ++;
@@ -12,11 +14,17 @@ void * inc_count() {
   return NULL;
 }
 
+// resets to a base 0 setup
 void reset() {
   count = 0;
 }
 
-void test_inc() {
+
+// test starts the THREAD_COUNT threads
+// each increments the global count variable
+// and would wait for all threads to complete
+// the function would print the expected and observed values
+void test() {
   pthread_t th[THREAD_COUNT];
 
   reset();
@@ -38,7 +46,7 @@ void test_inc() {
 
 int main(int argc, char *argv[]) {
   for (int i = 0; i < 10; i++) {
-    test_inc();
+    test();
   }
   return 0;
 }

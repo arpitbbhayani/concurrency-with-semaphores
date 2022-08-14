@@ -22,3 +22,9 @@ The only thing we would be using is Semaphores :)
 The entire series is based on one book called "The Little Book of Semaphores" which I read in college and thought of covering it in depth in this series.
 
 So, if you want to learn Concurrency in a very fun and interesting way, ho along :)
+
+
+```
+gcc -Wall <file> -lpthread
+./a.out
+```
