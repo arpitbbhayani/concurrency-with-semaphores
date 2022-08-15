@@ -10,6 +10,7 @@ struct cstack {
   int len;
   int capacity;
   int *array;
+  sem_t mutex;
 };
 typedef struct cstack cstack;
 
@@ -20,23 +21,41 @@ cstack * cs_new(int capacity) {
   s -> len = 0;
   s -> capacity = capacity;
   s -> array = (int *) malloc(capacity * sizeof(int));
+  sem_init(&s -> mutex, 0, 1);
   return s;
 }
 
 // destroying and marking the malloc'ed objects free for GC
 void cs_destroy(cstack *s) {
+  sem_destroy(&(s -> mutex));
   free(s -> array);
   free(s);
 }
 
 // push `x` on the stack
 void cs_push(cstack *s, int x) {
+  // wait for the turn
+  sem_wait(&(s -> mutex));
+
+  // one thread to enter and insert into the stack
   s -> array[(s -> len)++] = x;
+
+  // increase the counter allowing some other thread to enter
+  sem_post(&(s -> mutex));
 }
 
 // pops the last element from the stack
 int cs_pop(cstack *s) {
-  return s -> array[--(s -> len)];
+  // wait for the turn
+  sem_wait(&(s -> mutex));
+
+  // one thread to enter and insert into the stack
+  int x = s -> array[--(s -> len)];
+
+  // increase the counter allowing some other thread to enter
+  sem_post(&(s -> mutex));
+
+  return x;
 }
 
 // struct to pass an argument to the thread

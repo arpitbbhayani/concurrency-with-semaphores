@@ -29,11 +29,7 @@ void cs_destroy(cstack *s) {
 
 // push `x` on the stack
 void cs_push(cstack *s, int x) {
-  if (s -> len == s -> capacity) {
-    return;
-  }
   s -> array[(s -> len)++] = x;
-  return;
 }
 
 // pops the last element from the stack
