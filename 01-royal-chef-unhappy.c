@@ -3,8 +3,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define THREAD_COUNT 1000
-
 // Activities of the Chef and the King
 typedef enum { 
   CHEF_WAKES_UP,
@@ -58,7 +56,7 @@ void * routine_king() {
 }
 
 
-// resets to base 0
+// resets everything
 void reset() {
   is_prepared = 0;
   srand(time(NULL));
