@@ -44,20 +44,6 @@ void cs_push(cstack *s, int x) {
   sem_post(&(s -> mutex));
 }
 
-// pops the last element from the stack
-int cs_pop(cstack *s) {
-  // wait for the turn
-  sem_wait(&(s -> mutex));
-
-  // one thread to enter and insert into the stack
-  int x = s -> array[--(s -> len)];
-
-  // increase the counter allowing some other thread to enter
-  sem_post(&(s -> mutex));
-
-  return x;
-}
-
 // struct to pass an argument to the thread
 // at the beginning of the execution
 struct arg_cstack_push {
